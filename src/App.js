@@ -1,25 +1,52 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { Component} from 'react';
 import './App.css';
+import AddDocuments from './AddDocuments';
+import DocumentList from './DocumentList';
+import { set, remove } from 'immutable';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      documentIds: [],
+    }
+  }
+
+  onAddDocument = (newDocId) => {
+    const {documentIds} = this.state;
+    if(!documentIds.includes(newDocId)){
+      this.setState({documentIds: [...documentIds, newDocId]})
+    }
+  }
+  
+  onEditDocument = (i, newDocId) => {
+    this.setState({documentIds: set(this.state.documentIds, i, newDocId)})
+  }
+
+  onRemoveDocument = (i) => {
+    const {documentIds} = this.state; 
+    if(documentIds) this.setState({documentIds: remove(this.state.documentIds, i)})
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        
+        <AddDocuments handleSubmit={this.onAddDocument} text="Search Documents" className="searchDocs"/>
+
+        <div className="documentListWrapper">
+          {this.state.documentIds && this.state.documentIds.map((docId, i) => (  
+            <div key={docId} className="documentList">
+              
+              <DocumentList  
+                docId={docId} 
+                handleChangeId={(newDocId) => this.onEditDocument(i, newDocId)}
+                handleRemove={()=> this.onRemoveDocument(i)}
+              />
+            
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

@@ -12,3 +12,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.documentListWrapper {
+  width: 900px;
+  margin-left: 10%;
+  display: flex;
+}
+
+.documentList {
+  width: 45%;
+  margin: 2.5%;
+  display: flex;
+  flex-direction: column;
+}
+
+.searchDocs {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.documentComponent a {
+  width: 50%;
+}
+
+.removeBtn {
+  color: #666;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
