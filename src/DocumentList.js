@@ -55,35 +55,4 @@ class DocumentList extends React.Component {
 }
 
 
-
-/*
-
-const useDocuments = (docId) => {
-    const [documents, setDocuments] = useState([])
-    useEffect(()=> {
-        const docListener = DocumentsApi(docId)
-        const handleReceiveDocuments = (newDoc) => setDocuments(newDoc.detail)
-        
-        docListener.subscribeToDocuments(handleReceiveDocuments)
-
-        return () => docListener.unsubscribeToDocuments(handleReceiveDocuments)
-    }, [docId])
-    
-    return documents
-}
-
-
-const useDocuments = (docId, setDocuments) => {
-    useEffect(()=> {
-        const docListener = DocumentsApi(docId)
-        const handleReceiveDocuments = (newDoc) => setDocuments(newDoc.detail)
-        
-        docListener.subscribeToDocuments(handleReceiveDocuments)
-
-        return () => docListener.unsubscribeToDocuments(handleReceiveDocuments)
-    }, [docId])
-}
-*/
-
-
 export default DocumentList
