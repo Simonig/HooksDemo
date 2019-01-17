@@ -3,6 +3,7 @@ import './App.css';
 import AddDocuments from './AddDocuments';
 import DocumentList from './DocumentList';
 import { set, remove } from 'immutable';
+import withDocumentIds from './withDocumentIds';
 
 class App extends Component {
   constructor(props){
@@ -20,7 +21,10 @@ class App extends Component {
   }
   
   onEditDocument = (i, newDocId) => {
-    this.setState({documentIds: set(this.state.documentIds, i, newDocId)})
+    const {documentIds} = this.state;
+    if(!documentIds.includes(newDocId)){
+        this.setState({documentIds: set(this.state.documentIds, i, newDocId)})
+    }
   }
 
   onRemoveDocument = (i) => {
@@ -52,4 +56,27 @@ class App extends Component {
   }
 }
 
-export default App;
+const HocApp = ({addDocumentId, documentIds, editDocumentId, removeDocumentId}) => {
+  return (
+      <div className="App">
+          
+      <AddDocuments handleSubmit={addDocumentId} text="Search Documents" className="searchDocs"/>
+
+      <div className="documentListWrapper">
+        {documentIds && documentIds.map((docId, i) => (  
+          <div key={docId} className="documentList">
+            
+            <DocumentList  
+              docId={docId} 
+              handleChangeId={(newDocId) => editDocumentId(i, newDocId)}
+              handleRemove={()=> removeDocumentId(i)}
+            />
+          
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default withDocumentIds(HocApp);
