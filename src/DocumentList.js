@@ -1,8 +1,7 @@
 import React from 'react';
 import DocumentsApi from "./DocumentsApi"
 import AddDocuments from "./AddDocuments";
-import icon from './Icon.svg'
-
+import DocumentItem from "./DocumentItem";
 
 class DocumentList extends React.Component {
     constructor(props){
@@ -48,26 +47,12 @@ class DocumentList extends React.Component {
                 </div>
 
                 <div className="documentComponent">
-                    {this.state.documents && this.state.documents.map((doc, i) => <Document key={i} {...doc} />) }
+                    {this.state.documents && this.state.documents.map((doc, i) => <DocumentItem key={i} {...doc} />) }
                 </div>
             </React.Fragment>
         )
     }
 }
-
-const Document = ({name, url}) => {
-    return (
-        <div style={{padding: '10px 0', textAlign: 'left'}}>
-            <a href={url} styles={{display: 'flex'}}>
-                <img src={icon} alt="pdf logo" style={{width: '20px', height: '20px', color: '#666'}}/>
-                <span>{name}</span>
-            </a>
-        </div>
-    )
-}
-
-
-
 
 
 
