@@ -46,23 +46,4 @@ const isValid = (docId) => {
 
 export default AddDocuments
 
-/*
-const useAddDocuments = (addDocuments) => {
-    const [docId, setDocId] = useState("");
-    const [valid, setValid] = useState(true);
-
-    const validateDocId = () => {
-        if(isValid(docId)){
-            addDocuments(docId)
-            setValid(true)
-            setDocId("")
-        } else {
-            setValid(false)
-        }
-    }
-    return [docId, setDocId, valid, validateDocId]
-}
-*/
-
-
 
