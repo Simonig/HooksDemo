@@ -4,8 +4,7 @@ import AddDocuments from "./AddDocuments";
 import DocumentItem from "./DocumentItem";
 
 
-const useDocuments = (docId) => {
-    const [documents, setDocuments] = useState([])
+const useDocuments = (docId, setDocuments) => {
     useEffect(()=> {
         const docListener = DocumentsApi(docId)
         const handleReceiveDocuments = (newDoc) => setDocuments(newDoc.detail)
@@ -14,13 +13,12 @@ const useDocuments = (docId) => {
 
         return () => docListener.unsubscribeToDocuments(handleReceiveDocuments)
     }, [docId])
+    }
+
+
+const DocumentList = ({docId, handleChangeId, handleRemove, documentsHandler, documents}) => {
+    useDocuments(docId, documentsHandler);
     
-    return documents
-}
-
-
-const DocumentList = ({docId, handleChangeId, handleRemove}) => {
-    const documents = useDocuments(docId);
     return(
         <React.Fragment >
             <div className="documentListHeader">
