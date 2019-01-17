@@ -1,82 +1,60 @@
-import React, { Component} from 'react';
+import React, { useReducer} from 'react';
+import { set, remove} from 'immutable';
+
 import './App.css';
 import AddDocuments from './AddDocuments';
 import DocumentList from './DocumentList';
-import { set, remove } from 'immutable';
-import withDocumentIds from './withDocumentIds';
 
-class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      documentIds: [],
-    }
-  }
-
-  onAddDocument = (newDocId) => {
-    const {documentIds} = this.state;
-    if(!documentIds.includes(newDocId)){
-      this.setState({documentIds: [...documentIds, newDocId]})
-    }
-  }
-  
-  onEditDocument = (i, newDocId) => {
-    const {documentIds} = this.state;
-    if(!documentIds.includes(newDocId)){
-        this.setState({documentIds: set(this.state.documentIds, i, newDocId)})
-    }
-  }
-
-  onRemoveDocument = (i) => {
-    const {documentIds} = this.state; 
-    if(documentIds) this.setState({documentIds: remove(this.state.documentIds, i)})
-  }
-
-  render() {
-    return (
-      <div className="App">
-        
-        <AddDocuments handleSubmit={this.onAddDocument} text="Search Documents" className="searchDocs"/>
-
-        <div className="documentListWrapper">
-          {this.state.documentIds && this.state.documentIds.map((docId, i) => (  
-            <div key={docId} className="documentList">
-              
-              <DocumentList  
-                docId={docId} 
-                handleChangeId={(newDocId) => this.onEditDocument(i, newDocId)}
-                handleRemove={()=> this.onRemoveDocument(i)}
-              />
-            
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+export const documentIdsReducer = (state, {type, payload}) => {
+    switch(type){
+      case('REMOVE'): {
+        return remove(state, payload)
+      }
+      case('ADD'): {
+        return state.includes(payload) ? state : [...state, payload]
+      }
+      case('EDIT'): {
+        return set(state, payload.i, payload.newDocId)
+      }
+      default: return state
   }
 }
 
-const HocApp = ({addDocumentId, documentIds, editDocumentId, removeDocumentId}) => {
-  return (
-      <div className="App">
-          
-      <AddDocuments handleSubmit={addDocumentId} text="Search Documents" className="searchDocs"/>
 
-      <div className="documentListWrapper">
-        {documentIds && documentIds.map((docId, i) => (  
-          <div key={docId} className="documentList">
-            
-            <DocumentList  
-              docId={docId} 
-              handleChangeId={(newDocId) => editDocumentId(i, newDocId)}
-              handleRemove={()=> removeDocumentId(i)}
-            />
-          
-          </div>
-        ))}
-      </div>
+export const useDocumentIds = () => {
+  const [state, dispatch] = useReducer(documentIdsReducer, [])
+  const actions = {
+    addId: (payload) => dispatch({type: 'ADD', payload}),
+    removeId: (payload) => dispatch({type: 'REMOVE', payload}),
+    editId: (payload) => dispatch({type: 'EDIT', payload}) 
+  }
+
+  return [state, actions];
+}
+
+
+function App (){
+  const [documentIds, actions] = useDocumentIds();
+
+  return (
+    <div className="App"> 
+        <AddDocuments handleSubmit={actions.addId} text="Search Documents" className="searchDocs"/>
+
+        <div className="documentListWrapper">
+          {documentIds.map((docId, i) => (  
+            <div key={docId} className="documentList">    
+              <DocumentList  
+                docId={docId} 
+                handleChangeId={(newDocId) => actions.editId({i, newDocId})}
+                handleRemove={()=> actions.removeId(i)}
+              />
+            </div>
+          ))}
+        </div>
     </div>
   )
 }
 
-export default withDocumentIds(HocApp);
+
+
+export default App
